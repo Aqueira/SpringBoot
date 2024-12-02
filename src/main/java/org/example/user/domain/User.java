@@ -6,7 +6,6 @@ import org.example.authentication.enums.Role;
 import org.example.customer.domain.Customer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.validation.constraints.Size;
 import java.util.Collection;
 

@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface UserService {
     ResponseUserDTO create(RequestUserDTO entity);
 
-    Optional<ResponseUserDTO> read(Long id);
+    ResponseUserDTO read(Long id);
 
-    void update(Long id, RequestUserDTO entity);
+    ResponseUserDTO update(Long id, RequestUserDTO entity);
 
     void delete(Long id);
 

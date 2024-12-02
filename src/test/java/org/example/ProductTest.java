@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.authentication.application.impl.AuthServiceImpl;
 import org.example.authentication.dto.RequestLoginDTO;
+import org.example.authentication.dto.RequestRegistrationDTO;
 import org.example.authentication.dto.ResponseLoginDTO;
 import org.example.product.dto.RequestProductDTO;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,12 @@ public class ProductTest {
     @Autowired
     private MockMvc mvc;
 
-//    @Test - It's work!
-//    public void RegistrationUsers(){
-//        authService.register(new RequestRegistrationDTO("username1", "password", "sector"));
-//        authService.register(new RequestRegistrationDTO("username2", "password", "sector"));
-//        authService.register(new RequestRegistrationDTO("username3", "password", "sector"));
-//    }
+    @Test
+    public void RegistrationUsers(){
+        authService.register(new RequestRegistrationDTO("username1", "password", "sector"));
+        authService.register(new RequestRegistrationDTO("username2", "password", "sector"));
+        authService.register(new RequestRegistrationDTO("username3", "password", "sector"));
+    }
 
     @Test
     public void productAuthenticationToReadAllWithJwtAbort() throws Exception {

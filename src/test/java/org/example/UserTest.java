@@ -49,23 +49,23 @@ public class UserTest {
         logger.warn("AuthenticationCreate(abort) ended!");
     }
 
-//    @Test
-//    public void userAuthenticationToCreateWithJwtSuccess() throws Exception {
-//        logger.warn("AuthenticationCreate(abort) started!");
-//        ResponseLoginDTO responseLoginDTO = authService.login(new RequestLoginDTO("username2", "password"));
-//        mvc.perform(post("/api/user")
-//                        .header("Authorization", "Bearer " + responseLoginDTO.jwtToken())
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(toJson(
-//                                new RequestUserDTO(
-//                                        "newUsername",
-//                                        "newPassword",
-//                                        Role.USER,
-//                                        new RequestCustomerDTO("newCustomer", "newSector", null)
-//                                ))))
-//                .andExpect(status().isOk());
-//        logger.warn("AuthenticationCreate(abort) ended!");
-//    }
+    @Test
+    public void userAuthenticationToCreateWithJwtSuccess() throws Exception {
+        logger.warn("AuthenticationCreate(success) started!");
+        ResponseLoginDTO responseLoginDTO = authService.login(new RequestLoginDTO("username2", "password"));
+        mvc.perform(post("/api/user")
+                        .header("Authorization", "Bearer " + responseLoginDTO.jwtToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(
+                                new RequestUserDTO(
+                                        "newUsername",
+                                        "newPassword",
+                                        Role.USER,
+                                        new RequestCustomerDTO("newCustomer", "newSector", null)
+                                ))))
+                .andExpect(status().isOk());
+        logger.warn("AuthenticationCreate(success) ended!");
+    }
 
     @Test
     public void userAuthenticationToReadWithRoleManagerJwtAbort() throws Exception {
@@ -115,6 +115,16 @@ public class UserTest {
                         .header("Authorization", "Bearer " + responseLoginDTO.jwtToken()))
                 .andExpect(status().isOk());
         logger.warn("AuthenticationDeleteWithUserAdmin(success) ended!");
+    }
+
+    @Test
+    public void userAuthenticationToUpdateWithRoleUserJwtSuccess() throws Exception {
+        ResponseLoginDTO responseLoginDTO = authService.login(new RequestLoginDTO("username1", "password"));
+        mvc.perform(put("/api/user/12")
+                        .header("Authorization", "Bearer " + responseLoginDTO.jwtToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(new RequestUserDTO("newusernmae", "newpassword", Role.USER, null))))
+                .andExpect(status().isOk());
     }
 
     private String toJson(Object object) throws JsonProcessingException {

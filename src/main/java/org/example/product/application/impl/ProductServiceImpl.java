@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -35,19 +34,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Optional<ResponseProductDTO> read(Long id) {
-        return productRepository.findById(id).map(responseProductMapper::toDTO);
+    public ResponseProductDTO read(Long id) {
+        return productRepository.findById(id)
+                .map(responseProductMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override
     @Transactional
-    public void update(Long id, RequestProductDTO requestProductDTO) {
+    public ResponseProductDTO update(Long id, RequestProductDTO requestProductDTO) {
         productRepository.update(
                 id,
                 requestProductDTO.productName(),
                 requestProductDTO.quantity(),
                 requestProductDTO.price()
         );
+        return productRepository.findById(id)
+                .map(responseProductMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override

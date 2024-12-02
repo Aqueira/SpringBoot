@@ -36,8 +36,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Optional<ResponseOrderDTO> read(Long id) {
-        return orderRepository.read(id).map(responseOrderMapper::toDTO);
+    public ResponseOrderDTO read(Long id) {
+        return orderRepository.read(id)
+                .map(responseOrderMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
     @Override
@@ -47,8 +49,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void update(Long id, RequestOrderDTO requestOrderDTO) {
+    @Transactional
+    public ResponseOrderDTO update(Long id, RequestOrderDTO requestOrderDTO) {
         orderRepository.update(id, requestOrderDTO.deliverTo());
+        return orderRepository.read(id)
+                .map(responseOrderMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
     @Override

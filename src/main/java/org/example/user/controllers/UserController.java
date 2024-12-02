@@ -5,6 +5,8 @@ import org.example.user.application.UserService;
 import org.example.user.dto.RequestUserDTO;
 import org.example.user.dto.ResponseUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,14 +32,13 @@ public class UserController {
     @PreAuthorize("hasRole('USER') and #id == authentication.principal.id or hasAuthority('admin::read')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseUserDTO> read(@PathVariable Long id) {
-        return userService.read(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(userService.read(id));
     }
 
     @PreAuthorize("hasRole('USER') and #id == authentication.principal.id or hasAuthority('admin::update')")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody RequestUserDTO requestUserDTO) {
-        userService.update(id, requestUserDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseUserDTO> update(@PathVariable Long id, @RequestBody RequestUserDTO requestUserDTO) {
+        return ResponseEntity.ok(userService.update(id, requestUserDTO));
     }
 
     @PreAuthorize("hasRole('USER') and #id == authentication.principal.id or hasAuthority('admin::delete')")

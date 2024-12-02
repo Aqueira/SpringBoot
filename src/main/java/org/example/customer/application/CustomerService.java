@@ -9,9 +9,9 @@ import java.util.Optional;
 
 
 public interface CustomerService {
-    Optional<ResponseCustomerDTO> read(Long id);
+    ResponseCustomerDTO read(Long id);
 
-    void update(Long id, RequestCustomerDTO entity);
+    ResponseCustomerDTO update(Long id, RequestCustomerDTO entity);
 
     List<ResponseCustomerDTO> findAll();
 

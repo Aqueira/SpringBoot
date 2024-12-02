@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.order.domain.Order;
 import org.example.user.domain.User;
-
 import java.util.List;
 
 @Entity

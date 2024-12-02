@@ -6,13 +6,15 @@ import org.example.user.dto.RequestUserDTO;
 import org.example.user.dto.ResponseUserDTO;
 import org.example.user.dto.mapper.RequestUserMapper;
 import org.example.user.dto.mapper.ResponseUserMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -38,20 +40,31 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Optional<ResponseUserDTO> read(Long id) {
-        return userRepository.read(id).map(responseUserMapper::toDTO);
+    @Cacheable(value = "userCache", key = "#id")
+    public ResponseUserDTO read(Long id) {
+        return userRepository.read(id)
+                .map(responseUserMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
     }
 
     @Transactional
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "userCache", key = "#id"),
+            @CacheEvict(value = "customerCache", key = "#id")
+    })
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
     @Transactional
     @Override
-    public void update(Long id, RequestUserDTO requestUserDTO) {
+    @CachePut(value = "userCache", key = "#id")
+    public ResponseUserDTO update(Long id, RequestUserDTO requestUserDTO) {
         userRepository.update(id, requestUserDTO.username(), requestUserDTO.password(), requestUserDTO.role());
+        return userRepository.read(id)
+                .map(responseUserMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
     }
 
     @Transactional

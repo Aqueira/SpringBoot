@@ -15,7 +15,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT DISTINCT customer " +
             "FROM Customer customer " +
             "LEFT JOIN FETCH customer.orders order " +
-            "LEFT JOIN FETCH order.lineItems lineItems " +
             "WHERE customer.id = :id")
     Optional<Customer> read(@Param("id") Long id);
 

@@ -8,12 +8,15 @@ import org.example.customer.dto.mapper.ResponseCustomerMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,29 +26,32 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final ResponseCustomerMapper responseCustomerMapper;
-    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository,
-                               ResponseCustomerMapper responseCustomerMapper,
-                               RabbitTemplate rabbitTemplate) {
+                               ResponseCustomerMapper responseCustomerMapper) {
         this.customerRepository = customerRepository;
         this.responseCustomerMapper = responseCustomerMapper;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
 
     @Transactional
     @Override
-    public Optional<ResponseCustomerDTO> read(Long id) {
-        return customerRepository.read(id).map(responseCustomerMapper::toDTO);
+    @Cacheable(value = "customerCache", key = "#id")
+    public ResponseCustomerDTO read(Long id) {
+        return customerRepository.read(id)
+                .map(responseCustomerMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional
     @Override
-    public void update(Long id, RequestCustomerDTO requestCustomerDTO) {
+    @CachePut(value = "customerCache", key = "#id")
+    public ResponseCustomerDTO update(Long id, RequestCustomerDTO requestCustomerDTO) {
         customerRepository.update(requestCustomerDTO.name(), requestCustomerDTO.sector(), id);
-        rabbitTemplate.convertAndSend("customers", "", id);
+        return customerRepository.read(id)
+                .map(responseCustomerMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Updated FAILED!"));
     }
 
     @Transactional

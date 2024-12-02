@@ -31,7 +31,13 @@ public class OrderController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') and #id == authentication.principal.id or hasAuthority('management::read')")
     public ResponseEntity<ResponseOrderDTO> read(@PathVariable Long id) {
-        return orderService.read(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(orderService.read(id));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER') and #id == authentication.principal.id or hasAuthority('management::update')")
+    public ResponseEntity<ResponseOrderDTO> update(@PathVariable Long id, @RequestBody RequestOrderDTO requestOrderDTO) {
+        return ResponseEntity.ok(orderService.update(id, requestOrderDTO));
     }
 
     @GetMapping

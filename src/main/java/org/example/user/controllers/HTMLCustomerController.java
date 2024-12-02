@@ -23,10 +23,9 @@ public class HTMLCustomerController {
 
     @GetMapping("/customer/show/{id}")
     public String show(@PathVariable(value = "id") Long id, Model model) {
-        return customerService.read(id).map(value -> {
+        var value = customerService.read(id);
             model.addAttribute("customer", value);
             model.addAttribute("orders", value.orders());
             return "customer/withOrders";
-        }).orElseThrow(RuntimeException::new);
     }
 }

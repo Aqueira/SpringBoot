@@ -29,14 +29,13 @@ public class ProductController {
     @PreAuthorize("hasAuthority('management::read')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseProductDTO> read(@PathVariable Long id) {
-        return productService.read(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(productService.read(id));
     }
 
     @PreAuthorize("hasAuthority('management::update')")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody RequestProductDTO requestProductDTO) {
-        productService.update(id, requestProductDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseProductDTO> update(@PathVariable Long id, @RequestBody RequestProductDTO requestProductDTO) {
+        return ResponseEntity.ok(productService.update(id, requestProductDTO));
     }
 
     @PreAuthorize("hasAuthority('management::delete')")

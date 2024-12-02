@@ -26,7 +26,7 @@ public class CustomerController {
     @PreAuthorize("hasAnyRole('USER') and #id == authentication.principal.id or hasAuthority('management::read')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseCustomerDTO> read(@PathVariable("id") Long id) {
-        return customerService.read(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(customerService.read(id));
     }
 
     @GetMapping
@@ -37,9 +37,8 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') and #id == authentication.principal.id or hasAuthority('management::update')")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody RequestCustomerDTO requestCustomerDTO) {
-        customerService.update(id, requestCustomerDTO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseCustomerDTO> update(@PathVariable Long id, @RequestBody RequestCustomerDTO requestCustomerDTO) {
+        return ResponseEntity.ok(customerService.update(id, requestCustomerDTO));
     }
 
     @GetMapping("/current")
