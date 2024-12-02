@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer with orders</title>
+</head>
+<body>
+<h1>Customer with orders</h1>
+
+<h2>Customer:</h2>
+<!-- @thymesVar id="customer" type="org.example.customer.dto.ResponseCustomerDTO" -->
+<p th:text="${customer.id()}">ID: </p>
+<p th:text="${customer.name()}">Username: </p>
+<p th:text="${customer.sector()}">Sector: </p>
+<h2>Orders:</h2>
+
+<!-- @thymesVar id="order" type="org.example.order.dto.ResponseOrderDTO" -->
+<!-- @thymesVar id="orders" type="java.util.List<org.example.order.dto.ResponseOrderDTO>" -->
+<ul th:each="order: ${orders}">
+    <h3 th:text="${order.id()}">ID: </h3>
+    <li th:text="${order.deliverTo()}">Deliver to: </li>
+    <!-- @thymesVar id="lineItem" type="org.example.lineItem.dto.ResponseLineItemDTO" -->
+    <!-- @thymesVar id="lineItems" type = "java.util.List<org.example.lineItem.dto.ResponseLineItemDTO>-->
+    <tr th:each="lineItem: ${order.lineItems}">
+        <td th:text="${lineItem.productName()}">Product: </td>
+        <td th:text="${lineItem.price()}">Price: </td>
+        <td th:text="${lineItem.quantity()}">Quantity: </td>
+    </tr>
+</ul>
+
+</body>
+</html>
