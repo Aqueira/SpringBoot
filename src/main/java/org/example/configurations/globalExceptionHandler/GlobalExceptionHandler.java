@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("hITLER was RIght" + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username not found!" + ex.getMessage());
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)

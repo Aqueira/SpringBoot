@@ -5,8 +5,6 @@ import org.example.user.application.UserService;
 import org.example.user.dto.RequestUserDTO;
 import org.example.user.dto.ResponseUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

@@ -1,5 +1,6 @@
 package org.example.user.application.impl;
 
+import org.example.configurations.rabbitmq.RabbitMQService;
 import org.example.user.application.UserService;
 import org.example.user.data.UserRepository;
 import org.example.user.dto.RequestUserDTO;
@@ -7,10 +8,8 @@ import org.example.user.dto.ResponseUserDTO;
 import org.example.user.dto.mapper.RequestUserMapper;
 import org.example.user.dto.mapper.ResponseUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +21,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RequestUserMapper requestUserMapper;
     private final ResponseUserMapper responseUserMapper;
+    private final RabbitMQService rabbitMQService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RequestUserMapper requestUserMapper,
-                           ResponseUserMapper responseUserMapper) {
+                           ResponseUserMapper responseUserMapper,
+                           RabbitMQService rabbitMQService) {
         this.userRepository = userRepository;
         this.requestUserMapper = requestUserMapper;
         this.responseUserMapper = responseUserMapper;
+        this.rabbitMQService = rabbitMQService;
     }
 
     @Transactional
@@ -49,12 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "userCache", key = "#id"),
-            @CacheEvict(value = "customerCache", key = "#id")
-    })
     public void delete(Long id) {
         userRepository.deleteById(id);
+        rabbitMQService.sendInvalidationEvent(id);
     }
 
     @Transactional
@@ -62,6 +61,7 @@ public class UserServiceImpl implements UserService {
     @CachePut(value = "userCache", key = "#id")
     public ResponseUserDTO update(Long id, RequestUserDTO requestUserDTO) {
         userRepository.update(id, requestUserDTO.username(), requestUserDTO.password(), requestUserDTO.role());
+        rabbitMQService.sendInvalidationEvent(id);
         return userRepository.read(id)
                 .map(responseUserMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("User not found!"));

@@ -43,6 +43,6 @@ public class CustomerController {
 
     @GetMapping("/current")
     public ResponseEntity<UserDetails> current() {
-       return ResponseEntity.ok(customerService.getCurrent());
+        return ResponseEntity.ok(customerService.getCurrent());
     }
 }

@@ -120,7 +120,7 @@ public class UserTest {
     @Test
     public void userAuthenticationToUpdateWithRoleUserJwtSuccess() throws Exception {
         ResponseLoginDTO responseLoginDTO = authService.login(new RequestLoginDTO("username1", "password"));
-        mvc.perform(put("/api/user/12")
+        mvc.perform(put("/api/user/1")
                         .header("Authorization", "Bearer " + responseLoginDTO.jwtToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(new RequestUserDTO("newusernmae", "newpassword", Role.USER, null))))

@@ -5,7 +5,6 @@ import org.example.user.dto.RequestUserDTO;
 import org.example.user.dto.ResponseUserDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface UserService {
