@@ -50,6 +50,27 @@ public class CustomerServiceImpl implements CustomerService {
     public ResponseCustomerDTO update(Long id, RequestCustomerDTO requestCustomerDTO) {
         customerRepository.update(requestCustomerDTO.name(), requestCustomerDTO.sector(), id);
         rabbitMQService.sendInvalidationEvent(id);
+
+        /*
+         *
+         *              Сервис             Реббит
+         * Вася -> Обновил данные
+         *               |
+         *             Инвалидровать ----> Сообщение курит в queue
+         *               |                      |
+         *             Cache Put                |
+         *             Обновили кеш             |
+         *               |                      |
+         * Вася <----  Ответ готов              |
+         *                                      |
+         *    CACHE HIT                         |
+         *                                      |
+         *            Юзер инвалидирован <--- опа
+         *
+         *    CACHE MISS - хотя юзер нормальный был в кеше, но из-за задержки мы его инвалидировали
+         *
+         */
+
         return customerRepository.read(id)
                 .map(responseCustomerMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Update customer FAILED!"));

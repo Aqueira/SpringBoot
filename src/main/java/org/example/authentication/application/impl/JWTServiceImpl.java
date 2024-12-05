@@ -66,11 +66,9 @@ public class JWTServiceImpl implements JWTService {
     public Boolean isTokenValid(String token, User userDetails) {
         String username = extractUsername(token);
         Integer tokenVersion = extractAllClaims(token).get("version", Integer.class);
-        return userRepository.findByUsername(username)
-                .map(user -> username.equals(userDetails.getUsername())
-                        && !isTokenExpired(token)
-                        && user.getCustomer().getVersion().equals(tokenVersion))
-                .orElseThrow(() -> new ValidationException("Service can't validate token!"));
+        return username.equals(userDetails.getUsername())
+          && !isTokenExpired(token)
+          && userDetails.getCustomer().getVersion().equals(tokenVersion);
     }
 
     private Boolean isTokenExpired(String token) {

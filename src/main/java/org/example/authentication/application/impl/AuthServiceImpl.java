@@ -1,6 +1,7 @@
 package org.example.authentication.application.impl;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.authentication.application.AuthService;
 import org.example.authentication.dto.RequestLoginDTO;
 import org.example.authentication.dto.RequestRegistrationDTO;
@@ -9,7 +10,6 @@ import org.example.authentication.enums.Role;
 import org.example.customer.domain.Customer;
 import org.example.user.data.UserRepository;
 import org.example.user.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,22 +18,12 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JWTServiceImpl jwtService;
     private final AuthenticationManager authenticationManager;
-
-    @Autowired
-    public AuthServiceImpl(UserRepository userRepository,
-                           PasswordEncoder bCryptPasswordEncoder,
-                           JWTServiceImpl jwtService,
-                           AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
 
     @Override
     @Transactional
