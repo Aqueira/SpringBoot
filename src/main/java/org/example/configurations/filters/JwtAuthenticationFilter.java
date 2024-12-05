@@ -38,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             if (!jwtService.extractUsername(token).isEmpty()) {
+                // fixme: cache
                 User user = userRepository.findByUsername(jwtService.extractUsername(token))
                         .orElseThrow(() -> new RuntimeException("User not found"));
                 if (jwtService.isTokenValid(token, user)) {
