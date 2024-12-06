@@ -6,8 +6,6 @@ import lombok.ToString;
 import org.example.order.domain.Order;
 import org.example.product.domain.Product;
 
-import java.util.List;
-
 @Entity
 @Data
 @Table(name = "line_items")
@@ -22,6 +20,10 @@ public class LineItem {
     @ToString.Exclude
     private Order order;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lineItem")
-    private List<Product> product;
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @OneToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    private Product product;
 }

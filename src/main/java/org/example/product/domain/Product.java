@@ -1,10 +1,7 @@
 package org.example.product.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.example.lineItem.domain.LineItem;
 
 
@@ -23,13 +20,10 @@ public class Product {
     @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
 
-    @Column(name = "quantity")
-    private Integer quantity;
-
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @ManyToOne
-    @JoinColumn(name = "line_item_id", referencedColumnName = "line_item_id")
+    @OneToOne(mappedBy = "product")
+    @ToString.Exclude
     private LineItem lineItem;
 }

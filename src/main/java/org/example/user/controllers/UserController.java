@@ -1,6 +1,7 @@
 package org.example.user.controllers;
 
 
+import lombok.RequiredArgsConstructor;
 import org.example.user.application.UserService;
 import org.example.user.dto.RequestUserDTO;
 import org.example.user.dto.ResponseUserDTO;
@@ -13,13 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

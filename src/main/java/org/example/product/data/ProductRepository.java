@@ -9,12 +9,11 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("UPDATE Product product " +
-            "SET product.productName = :name, product.price = :price, product.quantity = :quantity " +
+            "SET product.productName = :name, product.price = :price " +
             "WHERE product.id = :id")
     void update(
             @Param("id") Long id,
             @Param("name") String name,
-            @Param("quantity") Integer quantity,
             @Param("price") Double price
     );
 }

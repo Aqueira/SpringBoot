@@ -1,9 +1,14 @@
 package org.example.order.controller;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
+import org.example.customer.domain.Customer;
 import org.example.order.application.OrderService;
 import org.example.order.application.impl.OrderServiceImpl;
 import org.example.order.dto.RequestOrderDTO;
 import org.example.order.dto.ResponseOrderDTO;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,13 +18,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
+@RequiredArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
-
-    @Autowired
-    public OrderController(OrderServiceImpl orderService) {
-        this.orderService = orderService;
-    }
+    private final OrderServiceImpl orderService;
 
     @PreAuthorize("hasRole('USER') or hasAuthority('management::write')")
     @PostMapping

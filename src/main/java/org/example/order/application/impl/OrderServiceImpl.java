@@ -1,31 +1,23 @@
 package org.example.order.application.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.order.application.OrderService;
 import org.example.order.data.OrderRepository;
 import org.example.order.dto.RequestOrderDTO;
 import org.example.order.dto.ResponseOrderDTO;
 import org.example.order.dto.mapper.RequestOrderMapper;
 import org.example.order.dto.mapper.ResponseOrderMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final RequestOrderMapper requestOrderMapper;
     private final ResponseOrderMapper responseOrderMapper;
-
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository,
-                            RequestOrderMapper requestOrderMapper,
-                            ResponseOrderMapper responseOrderMapper) {
-        this.orderRepository = orderRepository;
-        this.requestOrderMapper = requestOrderMapper;
-        this.responseOrderMapper = responseOrderMapper;
-    }
 
     @Override
     @Transactional

@@ -4,10 +4,20 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.example.authentication.application.JWTService;
 import org.example.authentication.application.impl.JWTServiceImpl;
+import org.example.configurations.filters.mapper.FilterMapper;
+import org.example.customer.domain.Customer;
+import org.example.customer.dto.mapper.RequestCustomerMapper;
+import org.example.customer.dto.mapper.ResponseCustomerMapper;
+import org.example.user.application.UserService;
+import org.example.user.application.impl.UserServiceImpl;
 import org.example.user.data.UserRepository;
 import org.example.user.domain.User;
+import org.example.user.dto.ResponseUserDTO;
+import org.example.user.dto.mapper.RequestUserMapper;
+import org.example.user.dto.mapper.ResponseUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,28 +28,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
-    private final UserRepository userRepository;
-
-    @Autowired
-    public JwtAuthenticationFilter(JWTServiceImpl jwtService, UserRepository userRepository) {
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-    }
+    private final UserService userService;
+    private final FilterMapper filterMapper;
 
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
 
+        String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             if (!jwtService.extractUsername(token).isEmpty()) {
-                User user = userRepository.findByUsername(jwtService.extractUsername(token))
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                User user = filterMapper.responseDTOToEntity(userService.read(jwtService.extractCustomerId(token)));
                 if (jwtService.isTokenValid(token, user)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

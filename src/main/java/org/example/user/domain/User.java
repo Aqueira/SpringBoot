@@ -1,5 +1,6 @@
 package org.example.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.authentication.enums.Role;
@@ -35,12 +36,16 @@ public class User implements UserDetails {
     private Role role;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private Customer customer;
 
-    public User setThisUserInCustomer() {
-        customer.setUser(this);
-        return this;
+    public static class UserBuilder {
+        public User build(){
+            User user = new User(id, username, password, role, customer);
+            user.customer.setUser(user);
+            return user;
+        }
     }
 
     @Override

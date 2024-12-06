@@ -15,16 +15,17 @@ import java.util.List;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long id;
 
     @Column(name = "deliver_to", nullable = false, length = 100)
     private String deliverTo;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    @ToString.Exclude
     private Customer customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")

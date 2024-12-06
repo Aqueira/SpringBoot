@@ -43,7 +43,7 @@ public class UserTest {
                                 "newUser",
                                 "newPassword",
                                 Role.USER,
-                                new RequestCustomerDTO("newCustomer", "newSector", null)
+                                new RequestCustomerDTO("newCustomer", "newSector", null,null)
                         ))))
                 .andExpect(status().isUnauthorized());
         logger.warn("AuthenticationCreate(abort) ended!");
@@ -61,7 +61,7 @@ public class UserTest {
                                         "newUsername",
                                         "newPassword",
                                         Role.USER,
-                                        new RequestCustomerDTO("newCustomer", "newSector", null)
+                                        new RequestCustomerDTO("newCustomer", "newSector", null, null)
                                 ))))
                 .andExpect(status().isOk());
         logger.warn("AuthenticationCreate(success) ended!");

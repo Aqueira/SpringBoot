@@ -23,7 +23,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Modifying
     @Query("UPDATE Customer customer " +
-            "SET customer.name = :name, customer.sector = :sector WHERE customer.id = :customerId")
+            "SET customer.name = :name, customer.sector = :sector, customer.version = customer.version + 1 WHERE customer.id = :customerId")
     void update(
             @Param("name") String name,
             @Param("sector") String sector,

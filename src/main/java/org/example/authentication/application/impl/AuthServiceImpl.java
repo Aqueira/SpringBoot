@@ -1,6 +1,7 @@
 package org.example.authentication.application.impl;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.authentication.application.AuthService;
 import org.example.authentication.dto.RequestLoginDTO;
 import org.example.authentication.dto.RequestRegistrationDTO;
@@ -18,22 +19,12 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final JWTServiceImpl jwtService;
     private final AuthenticationManager authenticationManager;
-
-    @Autowired
-    public AuthServiceImpl(UserRepository userRepository,
-                           PasswordEncoder bCryptPasswordEncoder,
-                           JWTServiceImpl jwtService,
-                           AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
 
     @Override
     @Transactional
@@ -46,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
                         .name(requestRegistrationDTO.username())
                         .sector(requestRegistrationDTO.sector())
                         .build())
-                .build().setThisUserInCustomer());
+                .build());
     }
 
     @Override

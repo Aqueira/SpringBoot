@@ -1,9 +1,9 @@
 package org.example.product.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.product.application.ProductService;
 import org.example.product.dto.RequestProductDTO;
 import org.example.product.dto.ResponseProductDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-
-    @Autowired
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @PostMapping
     @PreAuthorize("hasAuthority('management::write')")

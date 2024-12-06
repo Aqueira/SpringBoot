@@ -1,5 +1,6 @@
 package org.example.product.application.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.product.application.ProductService;
 import org.example.product.data.ProductRepository;
 import org.example.product.dto.RequestProductDTO;
@@ -12,18 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ResponseProductMapper responseProductMapper;
     private final RequestProductMapper requestProductMapper;
-
-    public ProductServiceImpl(ProductRepository productRepository,
-                              ResponseProductMapper responseProductMapper,
-                              RequestProductMapper requestProductMapper) {
-        this.productRepository = productRepository;
-        this.responseProductMapper = responseProductMapper;
-        this.requestProductMapper = requestProductMapper;
-    }
 
 
     @Override
@@ -43,12 +37,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ResponseProductDTO update(Long id, RequestProductDTO requestProductDTO) {
-        productRepository.update(
-                id,
-                requestProductDTO.productName(),
-                requestProductDTO.quantity(),
-                requestProductDTO.price()
-        );
+        productRepository.update(id, requestProductDTO.productName(), requestProductDTO.price());
         return productRepository.findById(id)
                 .map(responseProductMapper::toDTO)
                 .orElseThrow(() -> new RuntimeException("Product not found"));

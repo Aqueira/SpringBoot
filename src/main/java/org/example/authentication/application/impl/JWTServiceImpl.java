@@ -7,13 +7,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.example.authentication.application.JWTService;
-import org.example.user.data.UserRepository;
 import org.example.user.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.user.dto.ResponseUserDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,21 +21,20 @@ import java.util.function.Function;
 
 @Service
 public class JWTServiceImpl implements JWTService {
-    private final UserRepository userRepository;
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
     @Value("${application.security.jwt.expiration}")
     private Long jwtExpiration;
 
-    @Autowired
-    public JWTServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
 
     @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    @Override
+    public Long extractCustomerId(String token) {
+        return extractClaim(token, claims -> claims.get("customer_id", Long.class));
     }
 
     @Override
@@ -65,12 +62,10 @@ public class JWTServiceImpl implements JWTService {
     @Override
     public Boolean isTokenValid(String token, User userDetails) {
         String username = extractUsername(token);
-        Integer tokenVersion = extractAllClaims(token).get("version", Integer.class);
-        return userRepository.findByUsername(username)
-                .map(user -> username.equals(userDetails.getUsername())
-                        && !isTokenExpired(token)
-                        && user.getCustomer().getVersion().equals(tokenVersion))
-                .orElseThrow(() -> new ValidationException("Service can't validate token!"));
+        Long tokenVersion = extractAllClaims(token).get("version", Long.class);
+        return username.equals(userDetails.getUsername())
+                && !isTokenExpired(token)
+                && userDetails.getCustomer().getVersion().equals(tokenVersion);
     }
 
     private Boolean isTokenExpired(String token) {
