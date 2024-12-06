@@ -30,7 +30,7 @@ public class Customer {
 
     @Version
     @Column(name = "version")
-    private Long version;
+    private Long version = 0L;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")

@@ -1,6 +1,7 @@
 package org.example.user.controllers;
 
 
+import lombok.RequiredArgsConstructor;
 import org.example.customer.application.CustomerService;
 import org.example.customer.application.impl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("main")
+@RequiredArgsConstructor
 public class HTMLCustomerController {
     private final CustomerService customerService;
-
-    @Autowired
-    public HTMLCustomerController(CustomerServiceImpl customerService) {
-        this.customerService = customerService;
-    }
-
 
     @GetMapping("/customer/show/{id}")
     public String show(@PathVariable(value = "id") Long id, Model model) {

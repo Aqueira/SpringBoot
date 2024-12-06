@@ -6,6 +6,7 @@ import org.example.customer.domain.Customer;
 import org.example.lineItem.domain.LineItem;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -30,4 +31,12 @@ public class Order {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<LineItem> lineItems;
+
+    public static class OrderBuilder {
+        public Order build() {
+            Order order = new Order(id, deliverTo, customer, lineItems);
+            order.lineItems.forEach(lineItem -> lineItem.setOrder(order));
+            return order;
+        }
+    }
 }
