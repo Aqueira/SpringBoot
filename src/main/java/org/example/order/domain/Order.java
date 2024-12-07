@@ -6,7 +6,7 @@ import org.example.customer.domain.Customer;
 import org.example.lineItem.domain.LineItem;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Entity
 @NoArgsConstructor

@@ -1,8 +1,7 @@
 package org.example.lineItem.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import org.example.order.domain.Order;
 import org.example.product.domain.Product;
 
@@ -23,7 +22,7 @@ public class LineItem {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 }

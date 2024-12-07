@@ -12,7 +12,6 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {RequestProductMapper.class})
 public interface RequestLineItemMapper {
-    @Mapping(target = "product.id", source = "productId")
     LineItem toEntity(RequestLineItemDTO requestLineItemDTO);
 
     List<LineItem> toEntities(List<RequestLineItemDTO> requestLineItemDTOList);

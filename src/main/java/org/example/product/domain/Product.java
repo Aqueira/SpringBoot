@@ -3,7 +3,6 @@ package org.example.product.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

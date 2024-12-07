@@ -12,7 +12,6 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {ResponseProductMapper.class, ResponseOrderMapper.class})
 public interface ResponseLineItemMapper {
-    @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "orderId", source = "order.id")
     ResponseLineItemDTO toDTO(LineItem lineItem);
 
