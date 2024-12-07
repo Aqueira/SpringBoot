@@ -2,7 +2,6 @@ package org.example.product.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.lineItem.domain.LineItem;
 
 
 @Entity
@@ -22,8 +21,4 @@ public class Product {
 
     @Column(name = "price", nullable = false)
     private Double price;
-
-    @OneToOne(mappedBy = "product")
-    @ToString.Exclude
-    private LineItem lineItem;
 }
