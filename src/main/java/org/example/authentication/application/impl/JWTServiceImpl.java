@@ -33,8 +33,8 @@ public class JWTServiceImpl implements JWTService {
     }
 
     @Override
-    public Long extractCustomerId(String token) {
-        return extractClaim(token, claims -> claims.get("customer_id", Long.class));
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("user_id", Long.class));
     }
 
     @Override
@@ -46,6 +46,7 @@ public class JWTServiceImpl implements JWTService {
     @Override
     public String generateToken(User userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("user_id", userDetails.getId());
         extraClaims.put("customer_id", userDetails.getCustomer().getId());
         extraClaims.put("sector", userDetails.getCustomer().getSector());
         extraClaims.put("role", userDetails.getCustomer().getUser().getRole());

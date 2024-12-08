@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             if (!jwtService.extractUsername(token).isEmpty()) {
-                User user = filterMapper.responseDTOToEntity(userService.read(jwtService.extractCustomerId(token)));
+                User user = filterMapper.responseDTOToEntity(userService.read(jwtService.extractUserId(token)));
                 if (jwtService.isTokenValid(token, user)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

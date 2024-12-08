@@ -15,5 +15,5 @@ public interface JWTService {
 
     Boolean isTokenValid(String token, User user);
 
-    Long extractCustomerId(String token);
+    Long extractUserId(String token);
 }
