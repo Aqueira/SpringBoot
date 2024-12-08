@@ -24,7 +24,7 @@ public abstract class RequestLineItemMapper {
     public abstract List<LineItem> toEntities(List<RequestLineItemDTO> requestLineItemDTOList);
 
     @Named("getReference")
-    protected Product productToReference(Long id){
+    protected Product getReference(Long id){
         return entityManager.getReference(Product.class, id);
     }
 }
