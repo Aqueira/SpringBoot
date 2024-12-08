@@ -24,7 +24,7 @@ public abstract class RequestOrderMapper {
     public abstract List<Order> toEntities(List<RequestOrderDTO> requestOrderDTOs);
 
     @Named("getReference")
-    protected Customer toReference(Long id) {
+    protected Customer getReference(Long id) {
         return entityManager.getReference(Customer.class, id);
     }
 }
