@@ -13,17 +13,17 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {RequestLineItemMapper.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = RequestLineItemMapper.class)
 public abstract class RequestOrderMapper {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Mapping(target = "customer", source = "customerId", qualifiedByName = "toReference")
+    @Mapping(target = "customer", source = "customerId", qualifiedByName = "getReference")
     public abstract Order toEntity(RequestOrderDTO requestOrderDTO);
 
     public abstract List<Order> toEntities(List<RequestOrderDTO> requestOrderDTOs);
 
-    @Named("toReference")
+    @Named("getReference")
     protected Customer toReference(Long id) {
         return entityManager.getReference(Customer.class, id);
     }

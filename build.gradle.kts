@@ -55,6 +55,8 @@ dependencies {
 
 	// MapStruct for code generation
 	implementation("org.mapstruct:mapstruct:1.6.3")
+	implementation("org.mapstruct.extensions.spring:mapstruct-spring-extensions:1.1.2")
+
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
 	// Development tools for Spring Boot
